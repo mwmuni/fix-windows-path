@@ -48,6 +48,26 @@ At the top of `fix_path.ps1`:
 - If PATH remains long even after cleanup, check the note printed about protected entries exceeding `$MaxLength` and increase it accordingly.
 - If execution policy blocks the script, use the `-ExecutionPolicy Bypass` example above for a one-off run.
 
+## System PATH (Administrator)
+
+If you need to manage the Machine (system) PATH rather than your User PATH, this repo includes `fix_path_system.ps1` which performs the same cleaning, de-duplication, and PB1..PB4 rebalancing at Machine scope.
+
+- Operates on Machine-scoped environment variables: `Path`, `PB1`, `PB2`, `PB3`, `PB4`.
+- Requires an elevated PowerShell session (Run as Administrator).
+- The script creates missing PB1..PB4 at Machine scope and saves a timestamped backup of the current Machine PATH and PB values to `$env:TEMP` before making changes.
+
+Usage (in an elevated PowerShell window):
+
+```powershell
+# Run directly from the repo while elevated
+.\fix_path_system.ps1
+
+# Or as a one-off with policy bypass (when elevation is already granted)
+pwsh -ExecutionPolicy Bypass -File .\fix_path_system.ps1
+```
+
+Restart shells and applications to pick up Machine-level environment changes.
+
 ## License
 
 MIT
